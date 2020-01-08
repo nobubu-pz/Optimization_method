@@ -43,11 +43,40 @@ def hyper_P(x, y, theta, Opt_type, num_i = 100, alpha = 0.01):
 
     if (Opt_type == "GD"):
         for i in range(num_i):
-            theta = theta + alpha* km.Parameter_Optimization.Gradient_Parameter.HyperPara(x, x, y, theta, "GP")
+            theta = theta + alpha* km.Parameter_Optimization.Gradient_Parameter.HyperPara(x, y, theta, "GP")
             theta = copy.deepcopy(np.where(theta <= 1e-6, 1e-6, theta))
 
             print ("theta >> ")
             print (theta)
+    
+    # elif (Opt_type == "Adam"):
+    #     m = 0
+    #     v = 0
+    #     Beta_1 = 0.9
+    #     Beta_2 = 0.999
+    #     eta = 1e-8
+    #     eta_fin = 1e-6
+    #     i = 0
+    #     fin_flag = True
+
+    #     while (i < num_i and fin_flag):
+    #         g = km.Parameter_Optimization.Gradient_Parameter.HyperPara(x, y, theta, "GP")
+
+    #         m = Beta_1*m + (1 - Beta_1)*g
+    #         v = Beta_2*v + (1 - Beta_2)*g**2
+    #         m_prd = (m)/(1 - Beta_1)
+    #         v_prd = (v)/(1 - Beta_2)
+
+    #         theta = theta + alpha*(m_prd/(np.sqrt(v_prd) + eta))
+    #         theta = copy.deepcopy(np.where(theta <= 1e-6, 1e-6, theta))
+
+    #         print ("theta >> ")
+    #         print (theta)
+
+    #         if (np.sqrt(np.sum((g)**2)) < eta_fin):
+    #             fin_flag = False
+
+    #         i += 1
     
     elif (Opt_type == "Adam"):
         m = 0
@@ -56,27 +85,39 @@ def hyper_P(x, y, theta, Opt_type, num_i = 100, alpha = 0.01):
         Beta_2 = 0.999
         eta = 1e-8
         eta_fin = 1e-6
-        i = 0
-        fin_flag = True
+        # i = 0
+        X_len = len(x)
 
-        while (i < num_i and fin_flag):
-            g = km.Parameter_Optimization.Gradient_Parameter.HyperPara(x, x, y, theta, "GP")
+        num_epoch = 50
+        batch_size = 20
 
-            m = Beta_1*m + (1 - Beta_1)*g
-            v = Beta_2*v + (1 - Beta_2)*g**2
-            m_prd = (m)/(1 - Beta_1)
-            v_prd = (v)/(1 - Beta_2)
+        # fin_flag = True
 
-            theta = theta + alpha*(m_prd/(np.sqrt(v_prd) + eta))
-            theta = copy.deepcopy(np.where(theta <= 1e-6, 1e-6, theta))
+        for epoch in range(num_epoch):
+            shuffled_index = np.random.permutation(X_len)
+            x_shuffled = x[shuffled_index]
+            y_shuffled = y[shuffled_index]
 
-            print ("theta >> ")
-            print (theta)
+            for j in range(0, X_len, batch_size):
+                xi = x_shuffled[j: j+batch_size]
+                yi = y_shuffled[j: j+batch_size]
 
-            if (np.sqrt(np.sum((g)**2)) < eta_fin):
-                fin_flag = False
+                g = km.Parameter_Optimization.Gradient_Parameter.HyperPara(xi, yi, theta, "GP")
 
-            i += 1
+                m = Beta_1*m + (1 - Beta_1)*g
+                v = Beta_2*v + (1 - Beta_2)*g**2
+                m_prd = (m)/(1 - Beta_1)
+                v_prd = (v)/(1 - Beta_2)
+
+                theta = theta + alpha*(m_prd/(np.sqrt(v_prd) + eta))
+                theta = copy.deepcopy(np.where(theta <= 1e-6, 1e-6, theta))
+
+                # print ("theta >> ")
+                # print (theta)
+
+                # if (np.sqrt(np.sum((g)**2)) < eta_fin):
+                    # fin_flag = False
+
 
     return theta
 

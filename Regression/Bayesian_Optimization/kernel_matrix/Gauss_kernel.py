@@ -27,12 +27,12 @@ def Gradient_kernel(x, x_, i, j, shita):
     
     return dK_dtheta
 
-def Gradient_K(x, x_, shita):
+def Gradient_K(x, shita):
     N = len(x)
     dK = np.zeros(shape = [N, N, 3])
     for i in range(N):
         for j in range(N):
-            dK[i, j] = Gradient_kernel(x[i][:], x_[j][:], i, j, shita)
+            dK[i, j] = Gradient_kernel(x[i][:], x[j][:], i, j, shita)
     
     dK = dK.transpose(2, 0, 1)
     return dK
