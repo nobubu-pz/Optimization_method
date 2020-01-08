@@ -1,7 +1,7 @@
 import numpy as np
 import copy
 
-def Adam(num_i = 100, alpha = 0.01):
+def Adam(g, num_i = 100, alpha = 0.01):
 
     m = 0
     v = 0

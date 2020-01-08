@@ -1,9 +1,11 @@
 # coding: utf-8
 import numpy as np
 import kernel_matrix as km
+# import Acquisition_function as af
 # import Parameter_Optimization as pm
 import matplotlib.pyplot as plt
 import copy
+from scipy.stats import norm
 
 # class Bayesian_optimization:
 #     def __init__(self, n = 2):
@@ -121,6 +123,21 @@ def hyper_P(x, y, theta, Opt_type, num_i = 100, alpha = 0.01):
 
     return theta
 
+# def predict_F(x, x_add, theta, kernel_type = "GK", matrix_type = "Diagonal"):
+#     K = km.kernel_function.Kernel_matrix(x, x, theta, "GK", "Diagonal")
+#     K_inv = np.linalg.inv(K)
+
+#     # x_test = test_x(n)
+
+#     k_star = km.kernel_function.Kernel_matrix(x, x_add, theta, "GK", "Non_Diagonal")
+#     k_starstar = km.kernel_function.Kernel_matrix(x_add, x_add, theta, "GK", "Diagonal")
+
+#     mu = k_star.T @ K_inv @ y
+#     var = k_starstar - k_star.T @ K_inv @ k_star
+#     v = np.diag(np.abs(var)).reshape(-1,1)
+    
+#     return mu, v
+
 if __name__ == "__main__":
     # Bo = Bayesian_optimization()
     # x, z, A = Bo.read_data()
@@ -133,23 +150,31 @@ if __name__ == "__main__":
     theta = np.where(theta <= 0, -theta, theta)
     # theta = np.array([1.5, 0.7, 0.07])
 
-    x_test = test_x(n)
     # theta = hyper_P(x, y, theta, "GD")
+    print("In theta > ")
     theta = hyper_P(x, y, theta, "Adam")
 
 
     print ("theta >>")
     print (theta)
+    x_test = test_x(n)
 
-    K = km.kernel_function.Kernel_matrix(x, x, theta, "GK", "Diagonal")
-    K_inv = np.linalg.inv(K)
+    # K = km.kernel_function.Kernel_matrix(x, x, theta, "GK", "Diagonal")
+    # K_inv = np.linalg.inv(K)
 
-    k_star = km.kernel_function.Kernel_matrix(x, x_test, theta, "GK", "Non_Diagonal")
-    k_starstar = km.kernel_function.Kernel_matrix(x_test, x_test, theta, "GK", "Diagonal")
+    # x_test = test_x(n)
 
-    mu = k_star.T @ K_inv @ y
-    var = k_starstar - k_star.T @ K_inv @ k_star
-    v = np.diag(np.abs(var)).reshape(-1,1)
+    # k_star = km.kernel_function.Kernel_matrix(x, x_test, theta, "GK", "Non_Diagonal")
+    # k_starstar = km.kernel_function.Kernel_matrix(x_test, x_test, theta, "GK", "Diagonal")
+
+    # mu = k_star.T @ K_inv @ y
+    # var = k_starstar - k_star.T @ K_inv @ k_star
+    # v = np.diag(np.abs(var)).reshape(-1,1)
+
+    mu, v = km.kernel_function.predict_F(x, y, x_test, theta, "GK", "Diagonal")
+
+    x_add = km.Acquisition_function.Gradient_Descent(x, y, theta)
+    print (x_add)
 
     plt.figure(figsize=(12,8))
     plt.title('The result')
