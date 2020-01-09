@@ -173,13 +173,13 @@ if __name__ == "__main__":
 
     mu, v = km.kernel_function.predict_F(x, y, x_test, theta, "GK", "Diagonal")
 
-    x_add = km.Acquisition_function.Gradient_Descent(x, y, theta)
-    print (x_add)
+    x_add, y_add = km.Acquisition_function.Gradient_Descent(x, y, theta)
 
     plt.figure(figsize=(12,8))
     plt.title('The result')
     plt.fill_between(x_test.flatten(), (mu - np.sqrt(v)).flatten(), (mu + np.sqrt(v)).flatten())
     plt.plot(x_test.flatten(), mu , color='red', label='predicted_mean')
+    plt.plot(x_add.flatten(), y_add.flatten() , color='blue', label='EI')
     plt.scatter(x.flatten(), y.flatten(), label='traindata')
     plt.plot(x_test.flatten(), truef(x_test.flatten()), label='true_label', color='purple')
     plt.legend()

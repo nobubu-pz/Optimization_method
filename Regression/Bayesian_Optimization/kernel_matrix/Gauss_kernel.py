@@ -9,11 +9,17 @@ def Gauss_kernel(x, x_, i, j, theta):
     # print ("x_")
     # print (x_)
 
-    k = theta[0]*np.exp( -np.sqrt(np.sum((x - x_)**2))/(theta[1]) ) + theta[2]*delta(i, j)
+    x_norm = np.sum((x - x_)**2)
+    if (x_norm == 0.0):
+        x_norm = 1.0e-8
+        
+    k = theta[0]*np.exp( -np.sqrt(x_norm)/(theta[1]) ) + theta[2]*delta(i, j)
     # k1 = theta[0]*np.exp( -np.sum((x - x_)**2)/(theta[1]) )
     # print (k1)
     # k2 = theta[2]*delta(i, j)
     # print(k1 )
+    # print ("k >> ")
+    # print (k)
 
     return k
 

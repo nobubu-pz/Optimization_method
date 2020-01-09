@@ -8,6 +8,7 @@ def predict_F(x, y, x_add, theta, kernel_type = "GK", matrix_type = "Diagonal"):
 
     # x_test = test_x(n)
 
+
     k_star = Kernel_matrix(x, x_add, theta, "GK", "Non_Diagonal")
     k_starstar = Kernel_matrix(x_add, x_add, theta, "GK", "Diagonal")
 
@@ -29,7 +30,6 @@ def Kernel_matrix(x, x_, theta, kernel_type = "GK", matrix_type = "Diagonal"):
             N = len(x)
             M = len(x_)
             K = [[km.Gauss_kernel.Gauss_kernel(x[i][:], x_[j][:], -1, j, theta) for j in range(M)] for i in range(N)]
-            
 
     return np.array(K)
 

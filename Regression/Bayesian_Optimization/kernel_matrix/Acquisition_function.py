@@ -16,8 +16,9 @@ def Expected_Improvement(X, Y, X_add, theta, Opt_type = "Maximize"):
 
     mu, v = km.kernel_function.predict_F(X, Y, X_add, theta, "GK", "Diagonal")
     sigma = np.sqrt(v)
-    if (sigma < 1e-12):
-        sigma = 1e-12
+    # if (sigma < 1e-12):
+        # sigma = 1e-12
+    sigma = np.where(sigma < 1e-12, 1e-12, sigma)
     
     imp = mu - tau - eta
     Z = imp/ sigma
@@ -31,6 +32,17 @@ def Gradient_Descent(X, Y, theta, alpha = 0.1, Opt_type = "Maximize"):
     p = 1
     np.random.seed(42)
     x = np.random.randn(p, n).T
+    
+    ### tamesi
+    p = 100
+    x = np.linspace(0, 1, p).reshape(p, n)
+    print (X)
+    print (x)
+    # y_add = [Expected_Improvement(X, Y, x[i], theta, "Maximize") for i in range(p)]
+    y_add = Expected_Improvement(X, Y, x, theta, "Maximize")
+
+    return x, y_add
+    ### ---
 
     # def Adam(g, num_i = 100, alpha = 0.01):
     m = 0

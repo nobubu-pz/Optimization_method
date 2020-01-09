@@ -13,7 +13,7 @@ def Expected_Improvement(X, Y, X_add, theta, Opt_type = "Maximize"):
 
     if (Opt_type == "Maximize"):
         tau = np.max(Y)
-    elif (Opt_type == "Maximize"):
+    elif (Opt_type == "Minimize"):
         tau = np.min(Y)
 
     mu, v = kf.predict_F(X, Y, X_add, theta, "GK", "Diagonal")
@@ -33,6 +33,14 @@ def Gradient_Descent(X, Y, theta, alpha = 0.1, Opt_type = "Maximize"):
     p = 1
     np.random.seed(42)
     x = np.random.randn(p, n).T
+
+    ### tamesi
+    p = 100
+    x = np.linspace(0, 1, p).reshape(n, p)
+    Y = Expected_Improvement(X, Y, x, theta, "Maximize")
+
+    return x, Y
+    ### ---
 
     # def Adam(g, num_i = 100, alpha = 0.01):
     m = 0
